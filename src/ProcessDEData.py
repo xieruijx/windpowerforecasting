@@ -39,15 +39,18 @@ df_Dadd['ACTIVE_POWER'] = merged_df['sum_D']
 df_Dadd['LIMIT_POWER'] = 0
 df_Dadd['LIMIT_BOOL'] = False
 df_D = pd.read_csv('data/Data4Training/WindPowerData_D.csv')
+df_D['HAPPEN_TIME'] = pd.to_datetime(df_D['HAPPEN_TIME'])
 df_D = pd.concat([df_Dadd, df_D], ignore_index=True)
 df_D.set_index('HAPPEN_TIME', inplace=True)
+df_D = df_D.sort_index()
+df_D = df_D[~df_D.index.duplicated(keep='first')]
 df_D.to_csv('data/Data4Training/WindPowerData_Dmore.csv')
 
-# plt.figure(figsize=(8, 6))
-# plt.plot(range(len(df_D)), df_D['ACTIVE_POWER'])
-# plt.title('ACTIVE_POWER')
-# plt.xlabel('Time')
-# plt.ylabel('Value')
+plt.figure(figsize=(8, 6))
+plt.plot(range(len(df_D)), df_D['ACTIVE_POWER'])
+plt.title('ACTIVE_POWER')
+plt.xlabel('Time')
+plt.ylabel('Value')
 
 df_Eadd = pd.DataFrame(columns=['HAPPEN_TIME', 'ACTIVE_POWER', 'LIMIT_POWER', 'LIMIT_BOOL'])
 df_Eadd['HAPPEN_TIME'] = merged_df['HAPPEN_TIME']
@@ -55,14 +58,17 @@ df_Eadd['ACTIVE_POWER'] = merged_df['sum_E']
 df_Eadd['LIMIT_POWER'] = 0
 df_Eadd['LIMIT_BOOL'] = False
 df_E = pd.read_csv('data/Data4Training/WindPowerData_E.csv')
+df_E['HAPPEN_TIME'] = pd.to_datetime(df_E['HAPPEN_TIME'])
 df_E = pd.concat([df_Eadd, df_E], ignore_index=True)
 df_E.set_index('HAPPEN_TIME', inplace=True)
+df_E = df_E.sort_index()
+df_E = df_E[~df_E.index.duplicated(keep='first')]
 df_E.to_csv('data/Data4Training/WindPowerData_Emore.csv')
 
-# plt.figure(figsize=(8, 6))
-# plt.plot(range(len(df_E)), df_E['ACTIVE_POWER'])
-# plt.title('ACTIVE_POWER')
-# plt.xlabel('Time')
-# plt.ylabel('Value')
+plt.figure(figsize=(8, 6))
+plt.plot(range(len(df_E)), df_E['ACTIVE_POWER'])
+plt.title('ACTIVE_POWER')
+plt.xlabel('Time')
+plt.ylabel('Value')
 
 plt.show()

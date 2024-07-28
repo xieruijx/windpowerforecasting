@@ -183,19 +183,19 @@ def main():
 
     print('Proportion of limiting power: {}'.format(sum(merged_F['LIMIT_BOOL']) / len(merged_F)))
 
-    # print('Data types in the merged dataframe:')
-    # print(merged_F.dtypes)
-    # plt.figure(figsize=(8, 6))
-    # plt.hist(merged_F['ACTIVE_POWER'], bins=50, alpha=0.7)
-    # plt.title('Histogram for ACTIVE_POWER in F')
-    # plt.xlabel('Value')
-    # plt.ylabel('Frequency')
+    print('Data types in the merged dataframe:')
+    print(merged_F.dtypes)
+    plt.figure(figsize=(8, 6))
+    plt.hist(merged_F['ACTIVE_POWER'], bins=50, alpha=0.7)
+    plt.title('Histogram for ACTIVE_POWER in F')
+    plt.xlabel('Value')
+    plt.ylabel('Frequency')
 
-    # plt.figure(figsize=(8, 6))
-    # plt.plot(range(len(merged_F[~merged_F['LIMIT_BOOL']])), merged_F['ACTIVE_POWER'][~merged_F['LIMIT_BOOL']])
-    # plt.title('ACTIVE_POWER in F')
-    # plt.xlabel('Time')
-    # plt.ylabel('Value')
+    plt.figure(figsize=(8, 6))
+    plt.plot(range(len(merged_F[~merged_F['LIMIT_BOOL']])), merged_F['ACTIVE_POWER'][~merged_F['LIMIT_BOOL']])
+    plt.title('ACTIVE_POWER in F')
+    plt.xlabel('Time')
+    plt.ylabel('Value')
 
     # Wind farm DE
     print('*************************Wind Farm DE*************************')
