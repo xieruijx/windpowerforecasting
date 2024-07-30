@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 
-def DataMatrix1(name_wind, a_input, b_input, a_output, b_output, name_features=['u100', 'v100', 'sp', 'tcw'], l_hours=21, h_hours=51):    
+def DataMatrix1(name_wind, a_input, b_input, a_output, b_output, name_features=['u100', 'v100', 'sp', 'tcw', 'a100'], l_hours=21, h_hours=51):    
     df_power = pd.read_csv('data/Data4Training/WindPowerData96w_' + name_wind + '.csv')
     df_power['DAY'] = pd.to_datetime(df_power['DAY'])
     df_power.set_index('DAY', inplace=True)
@@ -51,7 +51,7 @@ def DataMatrix1(name_wind, a_input, b_input, a_output, b_output, name_features=[
 
     return matrix_input, matrix_output
 
-def DataMatrix4(name_wind, a_input, b_input, a_output, b_output, name_features=['u100', 'v100', 'sp', 'tcw'], l_hours=93, h_hours=122):    
+def DataMatrix4(name_wind, a_input, b_input, a_output, b_output, name_features=['u100', 'v100', 'sp', 'tcw', 'a100'], l_hours=93, h_hours=122):    
     df_power = pd.read_csv('data/Data4Training/WindPowerData96w_' + name_wind + '.csv')
     df_power['DAY'] = pd.to_datetime(df_power['DAY'])
     df_power.set_index('DAY', inplace=True)
@@ -101,24 +101,24 @@ def DataMatrix4(name_wind, a_input, b_input, a_output, b_output, name_features=[
 
 def main():
     print('*************************Wind Farm D*************************')
-    a_input=[51, 51, 4700, 91]
-    b_input=[0.57, 0.57, -20.94, -0.09]
+    a_input=[51, 51, 4700, 91, 940]
+    b_input=[0.57, 0.57, -20.94, -0.09, 0]
     a_output=410
     b_output=0.01
     DataMatrix1('D', a_input, b_input, a_output, b_output)
     DataMatrix4('D', a_input, b_input, a_output, b_output)
 
     print('*************************Wind Farm E*************************')
-    a_input=[51, 51, 4700, 91]
-    b_input=[0.57, 0.57, -20.94, -0.09]
+    a_input=[51, 51, 4700, 91, 940]
+    b_input=[0.57, 0.57, -20.94, -0.09, 0]
     a_output=900
     b_output=0.01
     DataMatrix1('E', a_input, b_input, a_output, b_output)
     DataMatrix4('E', a_input, b_input, a_output, b_output)
 
     print('*************************Wind Farm F*************************')
-    a_input=[51, 51, 4700, 91]
-    b_input=[0.57, 0.57, -20.94, -0.09]
+    a_input=[51, 51, 4700, 91, 940]
+    b_input=[0.57, 0.57, -20.94, -0.09, 0]
     a_output=390
     b_output=0.02
     DataMatrix1('F', a_input, b_input, a_output, b_output)

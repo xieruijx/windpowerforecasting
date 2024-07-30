@@ -46,10 +46,11 @@ class Day4Loss(nn.Module):
         loss = torch.mean(relative_error ** 2)
         return loss
 
-def TrainMLP(name_wind, name_day, cap, hidden_layers=[32], batch_size=64, num_epochs=500, weight_decay=1e-4):
+def TrainMLP(name_wind, name_day, cap, hidden_layers=[32], batch_size=64, num_epochs=500, weight_decay=1e-4, index_features=[0, 1, 2, 3, 4]):
     name_file = 'data/MediateData/DataMatrix' + name_day + '_' + name_wind + '_'
 
     matrix_input = np.load(name_file + 'input.npy')
+    matrix_input = matrix_input[:, :, index_features]
     matrix_output = np.load(name_file + 'output.npy')
 
     num_samples = matrix_input.shape[0]
@@ -102,16 +103,19 @@ def TrainMLP(name_wind, name_day, cap, hidden_layers=[32], batch_size=64, num_ep
 
     return matrix_input, matrix_output
 
-def Forecast1(file_weather, name_wind, longitude, latitude, a_input, b_input, a_output, b_output, today, hidden_layers=[32], name_features=['u100', 'v100', 'sp', 'tcw'], l_hours=21, h_hours=51):
+def Forecast1(file_weather, name_wind, longitude, latitude, a_input, b_input, a_output, b_output, today, hidden_layers=[32], name_features=['u100', 'v100', 'sp', 'tcw', 'a100'], l_hours=21, h_hours=51):
 
     df_weather = pd.read_csv(file_weather)
     df_weather = df_weather.loc[(df_weather['longitude'] == longitude) & (df_weather['latitude'] == latitude), ['time', 'u100', 'v100', 'sp', 'tcw']]
+    df_weather['a100'] = (df_weather['v100'] ** 2) + (df_weather['u100'] ** 2)
     df_weather['time'] = pd.to_datetime(df_weather['time'])
     df_weather['time'] = df_weather['time'] + pd.Timedelta(hours=8)
     index_weather = pd.to_datetime(today)
     input_period = (df_weather['time'] >= index_weather + pd.Timedelta(hours=l_hours)) & (df_weather['time'] <= index_weather + pd.Timedelta(hours=h_hours))
     num_input_period = sum(input_period)
-    input_scaled = df_weather.loc[input_period, name_features].to_numpy() / (np.ones((num_input_period, 1)) @ np.array(a_input).reshape((1, -1))) + np.ones((num_input_period, 1)) @ np.array(b_input).reshape((1, -1))
+    df_weather = df_weather.loc[input_period, name_features]
+    df_weather.to_csv('data/MediateData/df_weather_' + name_wind + '1.csv')
+    input_scaled = df_weather.to_numpy() / (np.ones((num_input_period, 1)) @ np.array(a_input).reshape((1, -1))) + np.ones((num_input_period, 1)) @ np.array(b_input).reshape((1, -1))
     input_scaled = input_scaled.reshape((-1,))
 
     num_inputs = len(input_scaled)
@@ -126,16 +130,19 @@ def Forecast1(file_weather, name_wind, longitude, latitude, a_input, b_input, a_
     output = np.maximum((output_scaled - b_output) * a_output, 0)
     return output
 
-def Forecast4(file_weather, name_wind, longitude, latitude, a_input, b_input, a_output, b_output, today, hidden_layers=[32], name_features=['u100', 'v100', 'sp', 'tcw'], l_hours=93, h_hours=122):
+def Forecast4(file_weather, name_wind, longitude, latitude, a_input, b_input, a_output, b_output, today, hidden_layers=[32], name_features=['u100', 'v100', 'sp', 'tcw', 'a100'], l_hours=93, h_hours=122):
 
     df_weather = pd.read_csv(file_weather)
     df_weather = df_weather.loc[(df_weather['longitude'] == longitude) & (df_weather['latitude'] == latitude), ['time', 'u100', 'v100', 'sp', 'tcw']]
+    df_weather['a100'] = (df_weather['v100'] ** 2) + (df_weather['u100'] ** 2)
     df_weather['time'] = pd.to_datetime(df_weather['time'])
     df_weather['time'] = df_weather['time'] + pd.Timedelta(hours=8)
     index_weather = pd.to_datetime(today)
     input_period = (df_weather['time'] >= index_weather + pd.Timedelta(hours=l_hours)) & (df_weather['time'] <= index_weather + pd.Timedelta(hours=h_hours))
     num_input_period = sum(input_period)
-    input_scaled = df_weather.loc[input_period, name_features].to_numpy() / (np.ones((num_input_period, 1)) @ np.array(a_input).reshape((1, -1))) + np.ones((num_input_period, 1)) @ np.array(b_input).reshape((1, -1))
+    df_weather = df_weather.loc[input_period, name_features]
+    df_weather.to_csv('data/MediateData/df_weather_' + name_wind + '4.csv')
+    input_scaled = df_weather.to_numpy() / (np.ones((num_input_period, 1)) @ np.array(a_input).reshape((1, -1))) + np.ones((num_input_period, 1)) @ np.array(b_input).reshape((1, -1))
     input_scaled = input_scaled.reshape((-1,))
 
     num_inputs = len(input_scaled)
@@ -170,45 +177,45 @@ def main():
     print('*************************Wind Farm D*************************')
     longitude = 111.5
     latitude = 21.4
-    a_input=[51, 51, 4700, 91]
-    b_input=[0.57, 0.57, -20.94, -0.09]
+    a_input=[51, 51, 4700, 91, 940]
+    b_input=[0.57, 0.57, -20.94, -0.09, 0]
     a_output=410
     b_output=0.01
     cap = 399.9 / a_output + b_output
     hidden_layers=[128, 128, 128]
     TrainMLP('D', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3)
     output1 = Forecast1(file_weather, 'D', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
-    TrainMLP('D', '4', cap, hidden_layers=hidden_layers, num_epochs=150, weight_decay=1e-4)
+    TrainMLP('D', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4)
     output4 = Forecast4(file_weather, 'D', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
     output_file('D', output1, output4, today_str)
 
     # # print('*************************Wind Farm E*************************')
     longitude = 111.6
     latitude = 21.3
-    a_input=[51, 51, 4700, 91]
-    b_input=[0.57, 0.57, -20.94, -0.09]
+    a_input=[51, 51, 4700, 91, 940]
+    b_input=[0.57, 0.57, -20.94, -0.09, 0]
     a_output=900
     b_output=0.01
     cap = 906.35 / a_output + b_output
     hidden_layers=[128, 128, 128]
     TrainMLP('E', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3)
     output1 = Forecast1(file_weather, 'E', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
-    TrainMLP('E', '4', cap, hidden_layers=hidden_layers, num_epochs=150, weight_decay=1e-4)
+    TrainMLP('E', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4)
     output4 = Forecast4(file_weather, 'E', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
     output_file('E', output1, output4, today_str)
 
     # # print('*************************Wind Farm F*************************')
     longitude = 111.5
     latitude = 21.3
-    a_input=[51, 51, 4700, 91]
-    b_input=[0.57, 0.57, -20.94, -0.09]
+    a_input=[51, 51, 4700, 91, 940]
+    b_input=[0.57, 0.57, -20.94, -0.09, 0]
     a_output=390
     b_output=0.02
     cap = 399.25 / a_output + b_output
     hidden_layers=[128, 128, 128]
     TrainMLP('F', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3)
     output1 = Forecast1(file_weather, 'F', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
-    TrainMLP('F', '4', cap, hidden_layers=hidden_layers, num_epochs=150, weight_decay=1e-4)
+    TrainMLP('F', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4)
     output4 = Forecast4(file_weather, 'F', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
     output_file('F', output1, output4, today_str)
 
