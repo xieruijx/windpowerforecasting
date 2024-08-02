@@ -184,46 +184,46 @@ def main():
     print('*************************Wind Farm D*************************')
     longitude = 111.5
     latitude = 21.4
-    a_input=[51, 51, 4700, 91, 940, 3.15]
-    b_input=[0.57, 0.57, -20.94, -0.09, 0, 0]
+    a_input=[940, 3.15]
+    b_input=[0, 0]
     a_output=410
     b_output=0.01
     cap = 399.9 / a_output + b_output
     hidden_layers=[128, 128, 128]
-    TrainMLP('D', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3)
-    output1 = Forecast1(file_weather, 'D', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
-    TrainMLP('D', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4)
-    output4 = Forecast4(file_weather, 'D', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
+    TrainMLP('D', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3, index_features=[4, 5])
+    output1 = Forecast1(file_weather, 'D', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['a100', 't100'])
+    TrainMLP('D', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4, index_features=[4, 5])
+    output4 = Forecast4(file_weather, 'D', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['a100', 't100'])
     output_file('D', output1, output4, today_str)
 
     # # print('*************************Wind Farm E*************************')
     longitude = 111.6
     latitude = 21.3
-    a_input=[51, 51, 4700, 91, 940, 3.15]
-    b_input=[0.57, 0.57, -20.94, -0.09, 0, 0]
+    a_input=[940, 3.15]
+    b_input=[0, 0]
     a_output=900
     b_output=0.01
     cap = 906.35 / a_output + b_output
     hidden_layers=[128, 128, 128]
-    TrainMLP('E', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3)
-    output1 = Forecast1(file_weather, 'E', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
-    TrainMLP('E', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4)
-    output4 = Forecast4(file_weather, 'E', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
+    TrainMLP('E', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3, index_features=[4, 5])
+    output1 = Forecast1(file_weather, 'E', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['a100', 't100'])
+    TrainMLP('E', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4, index_features=[4, 5])
+    output4 = Forecast4(file_weather, 'E', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['a100', 't100'])
     output_file('E', output1, output4, today_str)
 
     # # print('*************************Wind Farm F*************************')
     longitude = 111.5
     latitude = 21.3
-    a_input=[51, 51, 4700, 91, 940, 3.15]
-    b_input=[0.57, 0.57, -20.94, -0.09, 0, 0]
+    a_input=[940, 3.15]
+    b_input=[0, 0]
     a_output=390
     b_output=0.02
     cap = 399.25 / a_output + b_output
     hidden_layers=[128, 128, 128]
-    TrainMLP('F', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3)
-    output1 = Forecast1(file_weather, 'F', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
-    TrainMLP('F', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4)
-    output4 = Forecast4(file_weather, 'F', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers)
+    TrainMLP('F', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3, index_features=[4, 5])
+    output1 = Forecast1(file_weather, 'F', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['a100', 't100'])
+    TrainMLP('F', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4, index_features=[4, 5])
+    output4 = Forecast4(file_weather, 'F', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['a100', 't100'])
     output_file('F', output1, output4, today_str)
 
 if __name__ == "__main__":

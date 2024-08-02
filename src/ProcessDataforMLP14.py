@@ -2,9 +2,8 @@
 import pandas as pd
 import numpy as np
 import os
-import math
 
-def DataMatrix1(name_wind, a_input, b_input, a_output, b_output, name_features=['u100', 'v100', 'sp', 'tcw', 'a100', 't100'], l_hours=21, h_hours=51):    
+def DataMatrix1(name_wind, a_input, b_input, a_output, b_output, name_features=['u100', 'v100', 'sp', 'tcw', 'a100', 't100'], l_hours=15, h_hours=45):    
     df_power = pd.read_csv('data/Data4Training/WindPowerData96w_' + name_wind + '.csv')
     df_power['DAY'] = pd.to_datetime(df_power['DAY'])
     df_power.set_index('DAY', inplace=True)
@@ -13,7 +12,7 @@ def DataMatrix1(name_wind, a_input, b_input, a_output, b_output, name_features=[
 
     for index_power, _ in df_power.iterrows():
         index_weather = index_power - pd.Timedelta(days=1)
-        input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index_weather.strftime('%Y%m%d') + '08.csv'
+        input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index_weather.strftime('%Y%m%d') + '14.csv'
         if os.path.exists(input_filename):
             df_power.loc[index_power, 'Forecast1'] = True
 
@@ -27,7 +26,7 @@ def DataMatrix1(name_wind, a_input, b_input, a_output, b_output, name_features=[
     for index_power, _ in df_power.iterrows():
         if df_power.loc[index_power, 'Forecast1'] == True:
             index_weather = index_power - pd.Timedelta(days=1)
-            input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index_weather.strftime('%Y%m%d') + '08.csv'
+            input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index_weather.strftime('%Y%m%d') + '14.csv'
             df_weather = pd.read_csv(input_filename)
             df_weather['time'] = pd.to_datetime(df_weather['time'])
             timeindex_weather = (df_weather['time'] >= index_weather + pd.Timedelta(hours=l_hours)) & (df_weather['time'] <= index_weather + pd.Timedelta(hours=h_hours))
@@ -47,12 +46,12 @@ def DataMatrix1(name_wind, a_input, b_input, a_output, b_output, name_features=[
     print(ymax)
     print(ymin)
 
-    np.save('data/MediateData/DataMatrix1_' + name_wind + '_input.npy', matrix_input)
-    np.save('data/MediateData/DataMatrix1_' + name_wind + '_output.npy', matrix_output)
+    np.save('data/MediateData/DataMatrix1_14_' + name_wind + '_input.npy', matrix_input)
+    np.save('data/MediateData/DataMatrix1_14_' + name_wind + '_output.npy', matrix_output)
 
     return matrix_input, matrix_output
 
-def DataMatrix4(name_wind, a_input, b_input, a_output, b_output, name_features=['u100', 'v100', 'sp', 'tcw', 'a100', 't100'], l_hours=93, h_hours=122):    
+def DataMatrix4(name_wind, a_input, b_input, a_output, b_output, name_features=['u100', 'v100', 'sp', 'tcw', 'a100', 't100'], l_hours=87, h_hours=116):    
     df_power = pd.read_csv('data/Data4Training/WindPowerData96w_' + name_wind + '.csv')
     df_power['DAY'] = pd.to_datetime(df_power['DAY'])
     df_power.set_index('DAY', inplace=True)
@@ -61,7 +60,7 @@ def DataMatrix4(name_wind, a_input, b_input, a_output, b_output, name_features=[
 
     for index_power, _ in df_power.iterrows():
         index_weather = index_power - pd.Timedelta(days=4)
-        input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index_weather.strftime('%Y%m%d') + '08.csv'
+        input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index_weather.strftime('%Y%m%d') + '14.csv'
         if os.path.exists(input_filename):
             df_power.loc[index_power, 'Forecast4'] = True
 
@@ -75,12 +74,8 @@ def DataMatrix4(name_wind, a_input, b_input, a_output, b_output, name_features=[
     for index_power, _ in df_power.iterrows():
         if df_power.loc[index_power, 'Forecast4'] == True:
             index_weather = index_power - pd.Timedelta(days=4)
-            input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index_weather.strftime('%Y%m%d') + '08.csv'
+            input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index_weather.strftime('%Y%m%d') + '14.csv'
             df_weather = pd.read_csv(input_filename)
-            df_weather['a100'] = (df_weather['u100'] ** 2) + (df_weather['v100'] ** 2)
-            df_weather['t100'] = df_weather['a100']
-            for index_output, _ in df_weather.iterrows():
-                df_weather.loc[index_output, 't100'] = math.atan2(df_weather.loc[index_output, 'v100'], df_weather.loc[index_output, 'u100'])
             df_weather['time'] = pd.to_datetime(df_weather['time'])
             timeindex_weather = (df_weather['time'] >= index_weather + pd.Timedelta(hours=l_hours)) & (df_weather['time'] <= index_weather + pd.Timedelta(hours=h_hours))
 
@@ -99,8 +94,8 @@ def DataMatrix4(name_wind, a_input, b_input, a_output, b_output, name_features=[
     print(ymax)
     print(ymin)
 
-    np.save('data/MediateData/DataMatrix4_' + name_wind + '_input.npy', matrix_input)
-    np.save('data/MediateData/DataMatrix4_' + name_wind + '_output.npy', matrix_output)
+    np.save('data/MediateData/DataMatrix4_14_' + name_wind + '_input.npy', matrix_input)
+    np.save('data/MediateData/DataMatrix4_14_' + name_wind + '_output.npy', matrix_output)
 
     return matrix_input, matrix_output
 

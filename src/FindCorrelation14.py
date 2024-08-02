@@ -14,7 +14,7 @@ def WeatherMatrix(name_wind, name_feature):
 
     for index_df, _ in df_power.iterrows():
         index = index_df - pd.Timedelta(days=1)
-        input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index.strftime('%Y%m%d') + '08.csv'
+        input_filename = 'data/Data4Training/Weather_' + name_wind + '/' + index.strftime('%Y%m%d') + '14.csv'
         df_weather = pd.read_csv(input_filename)
         df_weather['time'] = pd.to_datetime(df_weather['time'])
         index_time = (df_weather['time'] < index_df + pd.Timedelta(days=1)) & (df_weather['time'] >= index_df)
