@@ -2,6 +2,7 @@
 
 import pandas as pd
 import os
+import math
 
 def ProcessWeather(name, longitude, latitude):
     foldername = 'data/Data4Training/Weather_' + name + '/'
@@ -20,6 +21,9 @@ def ProcessWeather(name, longitude, latitude):
                 df_input['tcw'] = df_input_tcw['tcw']
             df_output = df_input.loc[(df_input['longitude'] == longitude) & (df_input['latitude'] == latitude), ['time', 'u100', 'v100', 'sp', 'tcw']]
             df_output['a100'] = (df_output['u100'] ** 2) + (df_output['v100'] ** 2)
+            df_output['t100'] = df_output['a100']
+            for index_output, _ in df_output.iterrows():
+                df_output.loc[index_output, 't100'] = math.atan2(df_output.loc[index_output, 'v100'], df_output.loc[index_output, 'u100'])
             df_output['time'] = pd.to_datetime(df_output['time'])
             df_output['time'] = df_output['time'] + pd.Timedelta(hours=8)
             df_output.set_index('time', inplace=True)
