@@ -18,6 +18,11 @@ def CheckDayData(df):
         if (current_date_times_str.isin(df['HAPPEN_TIME_str'])).all():
             valid_dates[single_date] = True
 
+    for index_row, row in df.iterrows():
+        if row['ACTIVE_POWER'] in [0, -0.04182, 0.01926, 0.05377]:
+            index_day = row['HAPPEN_TIME'].date()
+            valid_dates[index_day] = False
+
     result_df = pd.DataFrame(valid_dates, columns=['Valid Dates'])
 
     return result_df

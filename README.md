@@ -3,6 +3,7 @@
 The order:
 ExtractWindPowerData.py
 ExtractWindTurbineData.py
+AnalyzeDEData.py
 ProcessDEData.py
 (ProcessAddData.py)
 ExamineWindPowerData.py

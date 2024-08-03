@@ -9,29 +9,34 @@ df_DE['HAPPEN_TIME'] = pd.to_datetime(df_DE['HAPPEN_TIME'])
 
 df_turbine = pd.read_csv('data/Data4Training/WindTurbineData_DE.csv')
 df_turbine['HAPPEN_TIME'] = pd.to_datetime(df_turbine['HAPPEN_TIME'])
-df_turbine = df_turbine.loc[df_turbine['HAPPEN_TIME'] <= pd.to_datetime('2023-12-29 13:30:00')]
+# df_turbine = df_turbine.loc[df_turbine['HAPPEN_TIME'] <= pd.to_datetime('2023-12-29 13:30:00')]
 
 id_DE = [f'#{i}' for i in range(1, 200)]
 id_D = [f'#{i}' for i in range(1, 63)]
 id_E = [f'#{i}' for i in range(63, 200)]
 df_turbine['sum_DE'] = df_turbine[id_DE].sum(axis=1) / 1000 * 1.1746715 + 3.13640512
 df_turbine['sum_D'] = df_turbine[id_D].sum(axis=1) / 1000 
+coefficients = [4.11655917e-05, 1.42067293e-02, 2.22406676e+00]
+df_turbine['sum_D'] = df_turbine['sum_D'] - (coefficients[0] * df_turbine['sum_D'] * df_turbine['sum_D'] + coefficients[1] * df_turbine['sum_D'] + coefficients[2])
 df_turbine['sum_E'] = df_turbine[id_E].sum(axis=1) / 1000 
+coefficients = [2.40464356e-05, 8.43379825e-03, 6.72874730e+00]
+df_turbine['sum_E'] = df_turbine['sum_E'] - (coefficients[0] * df_turbine['sum_E'] * df_turbine['sum_E'] + coefficients[1] * df_turbine['sum_E'] + coefficients[2])
 
 merged_df = pd.merge(df_DE, df_turbine, on='HAPPEN_TIME', how='inner')
-# sum_power = merged_df['sum_DE'].to_numpy()
-# DE_power = merged_df['ACTIVE_POWER'].to_numpy()
-# coefficients = np.polyfit(sum_power, DE_power, 1)
-# print(coefficients)
 
-# plt.figure(figsize=(8, 6))
-# plt.plot(range(len(merged_df)), merged_df['ACTIVE_POWER'])
+sum_power = merged_df['sum_DE'].to_numpy()
+DE_power = merged_df['ACTIVE_POWER'].to_numpy()
+coefficients = np.polyfit(sum_power, DE_power, 1)
+print(coefficients)
+
+plt.figure(figsize=(8, 6))
+plt.plot(range(len(merged_df)), merged_df['ACTIVE_POWER'], label='ACTIVE_POWER')
 # plt.plot(range(len(merged_df)), merged_df['sum_DE'])
-# plt.plot(range(len(merged_df)), merged_df['sum_D'] + merged_df['sum_E'])
-# plt.plot(range(len(merged_df)), merged_df['sum_D'])
-# plt.title('ACTIVE_POWER')
-# plt.xlabel('Time')
-# plt.ylabel('Value')
+plt.plot(range(len(merged_df)), merged_df['sum_D'] + merged_df['sum_E'], label='SUM')
+plt.title('ACTIVE_POWER')
+plt.xlabel('Time')
+plt.ylabel('Value')
+plt.legend()
 
 df_Dadd = pd.DataFrame(columns=['HAPPEN_TIME', 'ACTIVE_POWER', 'LIMIT_POWER', 'LIMIT_BOOL'])
 df_Dadd['HAPPEN_TIME'] = merged_df['HAPPEN_TIME']

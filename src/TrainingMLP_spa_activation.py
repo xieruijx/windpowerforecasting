@@ -21,6 +21,8 @@ class MLP(nn.Module):
     def forward(self, x):
         for layer in self.layers[:-1]:
             x = torch.nn.functional.relu(layer(x))
+            # x = torch.tanh(layer(x))
+            # x = torch.nn.functional.elu(layer(x))
         x = self.layers[-1](x)
         return x
     
@@ -64,7 +66,6 @@ def TrainMLP(name_wind, name_day, cap, hidden_layers=[32], batch_size=64, num_ep
     y = torch.tensor(matrix_output, dtype=torch.float32)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False, random_state=None)
 
     train_dataset = TensorDataset(X_train, y_train)
     test_dataset = TensorDataset(X_test, y_test)
@@ -184,9 +185,9 @@ def main():
     b_output=0.01
     cap = 399.9 / a_output + b_output
     hidden_layers=[128, 128, 128]
-    TrainMLP('D', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3, index_features=[2, 4])
+    TrainMLP('D', '1', cap, hidden_layers=hidden_layers, num_epochs=2000, weight_decay=1e-3, index_features=[2, 4])
     output1 = Forecast1(file_weather, 'D', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['sp', 'a100'])
-    TrainMLP('D', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4, index_features=[2, 4])
+    TrainMLP('D', '4', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-4, index_features=[2, 4])
     output4 = Forecast4(file_weather, 'D', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['sp', 'a100'])
     output_file('D', output1, output4, today_str)
 
