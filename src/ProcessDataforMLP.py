@@ -106,24 +106,24 @@ def DataMatrix4(name_wind, a_input, b_input, a_output, b_output, name_features=[
 
 def main():
     print('*************************Wind Farm D*************************')
-    a_input=[51, 51, 4700, 91, 940, 3.15]
-    b_input=[0.57, 0.57, -20.94, -0.09, 0, 0]
+    a_input=[51, 51, 4700, 91, 940, 6.3]
+    b_input=[0.57, 0.57, -20.94, -0.09, 0, 0.5]
     a_output=410
     b_output=0.01
     DataMatrix1('D', a_input, b_input, a_output, b_output)
     DataMatrix4('D', a_input, b_input, a_output, b_output)
 
     print('*************************Wind Farm E*************************')
-    a_input=[51, 51, 4700, 91, 940, 3.15]
-    b_input=[0.57, 0.57, -20.94, -0.09, 0, 0]
+    a_input=[51, 51, 4700, 91, 940, 6.3]
+    b_input=[0.57, 0.57, -20.94, -0.09, 0, 0.5]
     a_output=900
     b_output=0.01
     DataMatrix1('E', a_input, b_input, a_output, b_output)
     DataMatrix4('E', a_input, b_input, a_output, b_output)
 
     print('*************************Wind Farm F*************************')
-    a_input=[51, 51, 4700, 91, 940, 3.15]
-    b_input=[0.57, 0.57, -20.94, -0.09, 0, 0]
+    a_input=[51, 51, 4700, 91, 940, 6.3]
+    b_input=[0.57, 0.57, -20.94, -0.09, 0, 0.5]
     a_output=390
     b_output=0.02
     DataMatrix1('F', a_input, b_input, a_output, b_output)
