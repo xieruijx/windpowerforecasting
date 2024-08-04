@@ -99,7 +99,7 @@ def TrainMLP(name_wind, name_day, cap, hidden_layers=[32], batch_size=64, num_ep
                 test_loss = criterion(predictions, y_test)
                 print(f'Test Loss: {test_loss.item():.9f}')
 
-    torch.save(model.state_dict(), name_file + 'mlp_model.pth')
+    torch.save(model.state_dict(), name_file + 'mlp_model_a.pth')
 
     return matrix_input, matrix_output
 
@@ -122,7 +122,7 @@ def Forecast1(file_weather, name_wind, longitude, latitude, a_input, b_input, a_
     num_outputs = 96
 
     model = MLP(num_inputs, num_outputs, hidden_layers)
-    model.load_state_dict(torch.load('data/MediateData/DataMatrix1_' + name_wind + '_' + 'mlp_model.pth'))
+    model.load_state_dict(torch.load('data/MediateData/DataMatrix1_' + name_wind + '_' + 'mlp_model_a.pth'))
 
     model.eval()
     with torch.no_grad():
@@ -149,7 +149,7 @@ def Forecast4(file_weather, name_wind, longitude, latitude, a_input, b_input, a_
     num_outputs = 96
 
     model = MLP(num_inputs, num_outputs, hidden_layers)
-    model.load_state_dict(torch.load('data/MediateData/DataMatrix4_' + name_wind + '_' + 'mlp_model.pth'))
+    model.load_state_dict(torch.load('data/MediateData/DataMatrix4_' + name_wind + '_' + 'mlp_model_a.pth'))
 
     model.eval()
     with torch.no_grad():
@@ -215,7 +215,7 @@ def main():
     hidden_layers=[128, 128, 128]
     TrainMLP('F', '1', cap, hidden_layers=hidden_layers, num_epochs=500, weight_decay=1e-3, index_features=[4])
     output1 = Forecast1(file_weather, 'F', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['a100'])
-    TrainMLP('F', '4', cap, hidden_layers=hidden_layers, num_epochs=130, weight_decay=1e-4, index_features=[4])
+    TrainMLP('F', '4', cap, hidden_layers=hidden_layers, num_epochs=120, weight_decay=1e-4, index_features=[4])
     output4 = Forecast4(file_weather, 'F', longitude, latitude, a_input, b_input, a_output, b_output, pd.to_datetime(today_str), hidden_layers=hidden_layers, name_features=['a100'])
     output_file('F', output1, output4, today_str)
 
